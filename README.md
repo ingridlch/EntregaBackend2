@@ -10,7 +10,7 @@ Escucha en el puerto 8080 y tiene los grupos de rutas /products y /carts.
 - Desde una terminal clonar el proyecto en su máquina local
 
 ```batch
-git clone https://github.com/ingridlch/Entrega1Backend.git
+git clone https://github.com/ingridlch/Entrega2Backend.git
 ```
 
 - Situarse en el directorio del proyecto que se creó al clonar e instalarlo con:
