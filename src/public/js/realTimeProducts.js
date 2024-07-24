@@ -1,6 +1,6 @@
 const socket = io()
 
-socket.emit('message', "MENSAJE DESDE JS")
+socket.emit('message', "MENSAJE DESDE EL CLIENTE")
 
 /* cuando se crea un producto en el endpoint POST /api/products el servidor envía un mensaje con emit de socket.io
     aquí el cliente lo recibe y agrega el producto a la vista 
