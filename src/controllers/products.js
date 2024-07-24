@@ -1,4 +1,4 @@
-const fs = require('fs').promises
+import fs from "fs/promises"
 
 class Products{
   constructor(){
@@ -32,7 +32,7 @@ class Products{
   // Crea nuevo producto
   async setProduct(ptitle, pdescription, pcode, pprice, pstock, pcategory, pthumbnails){
     try {
-      const product = this.getValid(0, ptitle, pdescription, pcode, pprice, pstock, pcategory, pthumbnails);
+      const product = this.getValidNew(ptitle, pdescription, pcode, pprice, pstock, pcategory, pthumbnails);
       if(product){
         const products = await this.readProducts();
         product.id = products.length+1;
@@ -53,21 +53,65 @@ class Products{
   // Modifica producto
   async updateProduct(pid, ptitle, pdescription, pcode, pprice, pstock, pcategory, pthumbnails){
     try {
-      const product = this.getValid(pid, ptitle, pdescription, pcode, pprice, pstock, pcategory, pthumbnails);
-      if(!product){
-        console.log("Error al modificar producto, datos incorrectos");
-        return undefined
-      }
       const products = await this.readProducts();
-      const index = products.findIndex(pr => pr.id === product.id);
+      const index = products.findIndex(pr => pr.id === pid);
       if(index<0){
-        console.log("Error al modificar producto, id no valido");
+        console.log("Error al modificar producto, id no valido")
         return undefined
       }
-      products[index]=product;
+      if(ptitle){
+        if(ptitle.trim()!=''){
+          products[index].title=ptitle.trim()
+        } else {
+          console.log("Error al modificar producto, title no debe ser vacío")
+          return undefined
+        }
+      }
+      if(pdescription){
+        if(pdescription.trim()!=''){
+          products[index].description=pdescription.trim()
+        } else {
+          console.log("Error al modificar producto, description no debe ser vacío")
+          return undefined
+        }
+      }
+      if(pcode){
+        if(pcode.trim()!=''){
+          products[index].code=pcode.trim()
+        } else {
+          console.log("Error al modificar producto, code no debe ser vacío")
+          return undefined
+        }
+      }
+      if(pprice){
+        if(!isNaN(parseFloat(pprice))){
+          products[index].price=parseFloat(pprice)
+        } else {
+          console.log("Error al modificar producto, price debe ser un valor numérico")
+          return undefined
+        }
+      }
+      if(pstock){
+        if(!isNaN(parseFloat(pstock))){
+          products[index].stock=parseFloat(pstock)
+        } else {
+          console.log("Error al modificar producto, stock debe ser un valor numérico")
+          return undefined
+        }
+      }
+      if(pcategory){
+        if(pcategory.trim()!=''){
+          products[index].category=pcategory.trim()
+        } else {
+          console.log("Error al modificar producto, category no debe ser vacío")
+          return undefined
+        }
+      }
+      products[index].thumbnails= (pthumbnails && Array.isArray(pthumbnails)) ? pthumbnails : products[index].thumbnails
+      
       await fs.writeFile(this.file, JSON.stringify(products,null,2));
       console.log("Producto modificado correctamente");
-      return product;
+      return products[index];
     } catch(error){
       console.log("Error al modificar producto");
       throw error
@@ -94,9 +138,9 @@ class Products{
   }
 
   // Valida todos los datos para crear o modificar producto
-  getValid(pid, ptitle, pdescription, pcode, pprice, pstock, pcategory, pthumbnails){
+  getValidNew(ptitle, pdescription, pcode, pprice, pstock, pcategory, pthumbnails){
     let result=undefined
-    const id = parseInt(pid)
+    const id = 0
     const title = ptitle.trim()
     const description = pdescription.trim()
     const code = pcode.trim()
@@ -104,10 +148,10 @@ class Products{
     const stock = parseInt(pstock)
     const category = pcategory.trim()
     const thumbnails = pthumbnails===undefined|| !Array.isArray(pthumbnails) ? [] : pthumbnails
-    const status = true      
-    if (id>=0 && title!=='' && description!=='' && code.trim()!=='' && !isNaN(price) && !isNaN(stock) && category!==''){
+    const status = true    
+    if (title!=='' && description!=='' && code.trim()!=='' && !isNaN(price) && !isNaN(stock) && category!==''){
       result = {id, title, description, code, price, status, stock, category, thumbnails}
-    } 
+    }
     return result;  
   }
 
@@ -127,4 +171,5 @@ class Products{
     
 }
 
-module.exports = Products
+//module.exports = Products
+export default Products

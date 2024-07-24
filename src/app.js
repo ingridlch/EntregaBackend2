@@ -1,17 +1,23 @@
-const express = require("express")
-const path    = require("path")
-const productsRouter = require("./routes/products.router.js")
-const cartsRouter    = require("./routes/carts.router.js")
-
-const app  = express()
+import express from "express"
+import handlebars from 'express-handlebars'
+import __dirname from "./utils.js"
+import productsRouter from "./routes/products.router.js"
+import cartsRouter from "./routes/carts.router.js"
+import viewsRouter from "./routes/views.router.js"
+import servidor from "./server.js"
 const PORT = 8080
 
-app.use(express.json())
-app.use(express.urlencoded({extended:true}))
+servidor.app.use(express.json())
+servidor.app.use(express.urlencoded({extended:true}))
 
-app.use("/",productsRouter)
-app.use("/",cartsRouter)
+//configurar Handlebars
+servidor.app.engine('handlebars',handlebars.engine())
+servidor.app.set('views', __dirname + '/views')
+servidor.app.set('view engine','handlebars')
+servidor.app.use(express.static(__dirname+'/public'))
 
-app.listen(PORT,()=>{
-  console.log(`Server running on port ${PORT}`);
-})
+servidor.app.use("/api/products",productsRouter)
+servidor.app.use("/api/carts",cartsRouter)
+servidor.app.use("/",viewsRouter)
+
+const httpServer = servidor.server.listen(PORT, () => console.log(`Server running on port ${PORT}`))

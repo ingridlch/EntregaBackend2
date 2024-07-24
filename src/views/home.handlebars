@@ -1,0 +1,23 @@
+<div class="container-lg">
+  <div class="row">
+    <p class="text-center h5">¡Te presentamos nuestras delicias!</p>
+  </div>
+  <div class="row">
+    {{#each products}}
+      <div class="col-md-4">
+        <div class="card mb-2 mt-2" >
+          <div class="card-body p-2">
+            <h5 class="card-title">{{this.title}}</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">Categoría: {{this.category}} - Código: {{this.code}}</h6>
+            <p class="card-text">{{this.description}}</p>
+            <h6>$ {{this.price}}</h6>
+            <p class="text-body-secondary">Cant: {{this.stock}}<p>
+          </div>
+        </div>
+      </div>
+    {{/each}} 
+  </div>  
+  <div class="row">
+    <p class="text-center">Se encontraron {{ cant }} productos</p>
+  </div>
+</div>

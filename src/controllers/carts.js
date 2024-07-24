@@ -1,4 +1,4 @@
-const fs = require('fs').promises
+import fs from "fs/promises"
 
 class Carts{
   constructor(){
@@ -8,7 +8,7 @@ class Carts{
   // Crea nuevo carrito
   async setCart(products){
     try{
-      if(products.some(pr=>(!Number.isInteger(pr.product)||!Number.isInteger(pr.quantity)))){
+      if(products.some(pr=>(!Number.isInteger(pr.id)||!Number.isInteger(pr.quantity)))){
         console.log("Productos no validos")
         return undefined
       }
@@ -47,7 +47,7 @@ class Carts{
       }
       const pindex = carts[cindex].products.findIndex(pr => pr.id === pid);
       if(pindex<0){
-        carts[cindex].products.push({produc:pid,quantity:1})
+        carts[cindex].products.push({id:pid,quantity:1})
       } else {
         carts[cindex].products[pindex].quantity++;
       }
@@ -75,4 +75,5 @@ class Carts{
 
 }
 
-module.exports = Carts
+//module.exports = Carts
+export default Carts

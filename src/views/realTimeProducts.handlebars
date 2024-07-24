@@ -1,0 +1,72 @@
+<header>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <div class="text-center"><img src="./images/logopuertodelicia.png" alt="Logo Puerto Delicia" width="280" /></div>
+      </div>
+  </div>
+</header>
+<div class="container-lg">
+  <div class="row" id="listProducts">
+    {{#each products}}
+      <div class="col-md-4" id="p{{this.id}}">
+        <div class="card mb-2 mt-2" >
+          <div class="card-body p-2">
+            <h5 class="card-title">{{this.title}}</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">Categoría: {{this.category}} - Código: {{this.code}}</h6>
+            <p class="card-text">{{this.description}}</p>
+            <h6>$ {{this.price}}</h6>
+            <p class="text-body-secondary">Stock: {{this.stock}}<p>
+            <button class="btn btn-sm btn-outline-secondary" title="Eliminar producto" onClick="eliminar({{this.id}})">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    {{/each}} 
+  </div>  
+
+  <div class="row mt-3 p-2 bg-light">
+    <h6>Nuevo producto:</h6>
+    <div class="col bg-secondary-subtle">
+      <form name="fcrear" id="fcrear" action="">
+        <div class="mb-1">
+          <label class="form-label" for="title">Nombre:</label>
+          <input type="text" class="form-control" name="title" id="title" />
+        </div>
+        <div class="mb-1">
+          <label class="form-label" for="description">Descripción:</label>
+          <input type="text" class="form-control" name="description" id="description" />
+        </div>
+        <div class="mb-1">
+          <label class="form-label" for="code">Código:</label>
+          <input type="text" class="form-control" name="code" id="code" />
+        </div>
+        <div class="mb-1">
+          <label class="form-label" for="price">Precio ($):</label>
+          <input type="text" class="form-control" name="price" id="price" />
+        </div>
+        <div class="mb-1">
+          <label class="form-label" for="stock">Stock:</label>
+          <input type="text" class="form-control" name="stock" id="stock" />
+        </div>
+        <div class="mb-1">
+          <label class="form-label" for="category">Categoría:</label>
+          <select class="form-select" name="category" id="category">
+            <option value="tortas">Tortas</option>
+            <option value="minitortas">Mini tortas</option>
+            <option value="peques">Pequeñas dulzuras</option>
+          </select>
+        </div>
+        <div><p class="bg-warning-subtle" id="msg"></p></div>
+        <div class="m-2 text-center">
+          <button type="button" class="btn btn-outline-dark btn-light" onclick="crear(event)">Guardar producto</button>
+        </div>
+      </form>  
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTimeProducts.js"></script>

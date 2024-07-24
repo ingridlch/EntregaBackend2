@@ -15,9 +15,9 @@
   {
     "id": 2,
     "title": "Selva negra",
-    "description": "La infalible combinación de la cereza, el kirsch, la crema de leche y el chocolate hacen de esta torta una irresistible tentación. Un clásico de la pastelería alemana cuyo origen se pierde cuando el chocolate ya se había asentado en los paladares europeos.",
+    "description": "La infalible combinación de la cereza, el kirsch, la crema de leche y el chocolate hacen de esta torta una irresistible tentación.",
     "code": "S1",
-    "price": 23000,
+    "price": 24000,
     "status": false,
     "stock": 5,
     "category": "tortas",
@@ -28,11 +28,11 @@
   {
     "id": 3,
     "title": "Lemon Pie",
-    "description": "Exquisita combinación de masa friable, crema de limón y merengue italiano",
+    "description": "Exquisita combinación de masa friable, crema de limón y merengue italiano en un clásico de la pastelería.",
     "code": "L1",
     "price": 18000,
     "status": true,
-    "stock": 5,
+    "stock": 7,
     "category": "tortas",
     "thumbnails": [
       "lemonpie.jpg"
@@ -41,10 +41,10 @@
   {
     "id": 4,
     "title": "Red velvet",
-    "description": "El pastel de terciopelo rojo compuesto por un bizcochuelo de vibrante color y sabor combinado con una ganache de chocolate blanco deliciosa.",
+    "description": "El pastel de terciopelo rojo combina un bizcochuelo de vibrante color y sabor con una ganache de chocolate deliciosa.",
     "code": "R1",
     "price": 28000,
-    "status": true,
+    "status": false,
     "stock": 5,
     "category": "tortas",
     "thumbnails": [
@@ -67,7 +67,7 @@
   {
     "id": 6,
     "title": "Años locos",
-    "description": "Una torta súper tentadora compuesta por una base de brownie, una capa de dulce de leche y copos de merengue italiano o mouse de frutillas.",
+    "description": "Torta compuesta por una base de brownie, una capa de dulce de leche y copos de merengue italiano.",
     "code": "A1",
     "price": 28000,
     "status": true,
