@@ -2,7 +2,9 @@ const socket = io()
 
 socket.emit('message', "MENSAJE DESDE JS")
 
-// crea un producto en la vista al recibir el mensaje del servidor mediante websocket
+/* cuando se crea un producto en el endpoint POST /api/products el servidor envía un mensaje con emit de socket.io
+    aquí el cliente lo recibe y agrega el producto a la vista 
+*/
 socket.on('crea', (product)=> {
   const parent = document.getElementById("listProducts");
   var newCard = document.createElement("div")
@@ -25,7 +27,9 @@ socket.on('crea', (product)=> {
   parent.appendChild(newCard)
 });
 
-// elimina un producto de la vista al recibir el mensaje del servidor mediante websocket
+/* elimina un producto de la vista al recibir el mensaje del servidor mediante websocket
+   enviado desde el endpoint DELETE api/products/:id 
+*/
 socket.on('elimina', (id)=> {
   const parent = document.getElementById("listProducts");
   const child = document.getElementById("p"+id);

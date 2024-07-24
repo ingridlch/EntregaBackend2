@@ -8,6 +8,7 @@
 </header>
 <div class="container-lg">
   <div class="row" id="listProducts">
+    <!-- la lista de productos se arma inicialmente con handlebars, luego se actualiza con sockets -->
     {{#each products}}
       <div class="col-md-4" id="p{{this.id}}">
         <div class="card mb-2 mt-2" >
@@ -28,6 +29,8 @@
     {{/each}} 
   </div>  
 
+
+  <!-- el formulario para crear un producto se agregó sólo para pruebas, al probar con Postman funciona de igual manera -->
   <div class="row mt-3 p-2 bg-light">
     <h6>Nuevo producto:</h6>
     <div class="col bg-secondary-subtle">
