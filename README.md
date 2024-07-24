@@ -55,5 +55,5 @@ Se incluyen imágenes de pruebas que demuestran su funcionamiento.
 `/`: Devuelve la vista “home.handlebars” que contiene una lista de todos los productos agregados hasta el momento.
 ![/](./src/public/images/home.jpg)
 
-`/realtimeproducts`: Devuelve la vista “realTimeProducts.handlebars” que contiene la lista de productos pero trabaja con websockets, lo que permite que cada vez que se crea o elimina un producto nuevo,esta vista se actualiza automáticamente. El siguiente gif lo demuestra al usar los endpoints POST /api/products y DELETE /api/products/:id con Postman y desde el botón de eliminar un producto en la vista.
+`/realtimeproducts`: Devuelve la vista “realTimeProducts.handlebars” que contiene la lista de productos pero trabaja con websockets, lo que permite que cada vez que se crea o elimina un producto nuevo,esta vista se actualiza automáticamente. El siguiente gif lo demuestra al usar los endpoints POST /api/products y DELETE /api/products/:id con Postman y desde el botón para eliminar un producto en la vista.
 ![/realtimeproducts](./src/public/images/realtimeproducts.gif)
