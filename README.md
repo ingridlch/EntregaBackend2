@@ -3,7 +3,8 @@
 ### Descripción del proyecto:
 
 Desarrollo de un servidor basado en Node.JS y express. Contiene los endpoints y servicios necesarios para gestionar los productos y carrito de compras de un E-commerce.
-Escucha en el puerto 8080 y tiene los grupos de rutas /products y /carts.
+Escucha en el puerto 8080 y tiene los grupos de rutas /api/products y /api/carts.
+Incorpora el motor de plantillas Handlebars para las vistas e integra websockets.
 
 ### Pasos para probar el proyecto:
 
