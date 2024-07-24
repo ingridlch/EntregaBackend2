@@ -1,4 +1,4 @@
-# Primera entrega del Proyecto Final del Curso de PROGRAMACION BACKEND I de CODERHOUSE
+# Segunda entrega del Proyecto Final del Curso de PROGRAMACION BACKEND I de CODERHOUSE
 
 ### Descripción del proyecto:
 
