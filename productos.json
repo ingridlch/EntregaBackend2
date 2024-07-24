@@ -18,7 +18,7 @@
     "description": "La infalible combinación de la cereza, el kirsch, la crema de leche y el chocolate hacen de esta torta una irresistible tentación.",
     "code": "S1",
     "price": 24000,
-    "status": false,
+    "status": true,
     "stock": 5,
     "category": "tortas",
     "thumbnails": [
@@ -44,7 +44,7 @@
     "description": "El pastel de terciopelo rojo combina un bizcochuelo de vibrante color y sabor con una ganache de chocolate deliciosa.",
     "code": "R1",
     "price": 28000,
-    "status": false,
+    "status": true,
     "stock": 5,
     "category": "tortas",
     "thumbnails": [
@@ -62,19 +62,6 @@
     "category": "tortas",
     "thumbnails": [
       "rogel.jpg"
-    ]
-  },
-  {
-    "id": 6,
-    "title": "Años locos",
-    "description": "Torta compuesta por una base de brownie, una capa de dulce de leche y copos de merengue italiano.",
-    "code": "A1",
-    "price": 28000,
-    "status": true,
-    "stock": 7,
-    "category": "tortas",
-    "thumbnails": [
-      "anioslocos.jpg"
     ]
   }
 ]
