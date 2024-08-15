@@ -1,36 +1,34 @@
-import fs from "fs/promises"
+import cartModel from "../models/carts.model.js"
+import productModel from "../models/products.model.js"
 
 class Carts{
   constructor(){
-    this.file = "carrito.json"
+    this.error = ''
   }
 
   // Crea nuevo carrito
   async setCart(products){
     try{
-      if(products.some(pr=>(!Number.isInteger(pr.id)||!Number.isInteger(pr.quantity)))){
+      const novalidos = this.getNoValidProducts(products);
+      if(novalidos){
         console.log("Productos no validos")
         return undefined
       }
-      const carts = await this.readCarts();
-      const id    = carts.length+1;
-      const cart  = {id,products}
-      carts.push(cart);
-      await fs.writeFile(this.file, JSON.stringify(carts,null,2));
-      console.log("Carrito creado correctamente");
-      return cart;
+      const cart = await cartModel.create({products})
+      console.log("Carrito creado correctamente")
+      return cart
     } catch(error){
+      console.log(error)
       throw error
     }
   }
 
   // Busca carrito por id y lista los productos que le pertenecen
-  async getCart(id){
+  async getCart(cid){
     try{
-      const carts = await this.readCarts();
-      const cart = carts.find(ca=>ca.id===id);
+      const cart = await cartModel.findOne({ _id: cid }).populate("products.product").lean()
       console.log("Busca carrito")
-      return (cart) ? cart.products : undefined;
+      return cart;
     } catch(error){
       throw error
     }
@@ -39,41 +37,103 @@ class Carts{
   // Agrega producto al carrito o aumenta cantidad
   async setProductByCart(cid,pid){
     try{
-      const carts  = await this.readCarts();
-      const cindex = carts.findIndex(ca => ca.id === cid);
-      if(cindex<0){
-        console.log("Error al modificar carrito, id de carrito no valido");
-        return undefined
-      }
-      const pindex = carts[cindex].products.findIndex(pr => pr.id === pid);
+      const cart = await cartModel.findOne({ _id: cid })
+      const pindex = cart.products.findIndex(pr => pr.product.toString()===pid);
       if(pindex<0){
-        carts[cindex].products.push({id:pid,quantity:1})
+        cart.products.push({product:pid,quantity:1})
       } else {
-        carts[cindex].products[pindex].quantity++;
+        cart.products[pindex].quantity++
       }
-      await fs.writeFile(this.file, JSON.stringify(carts,null,2));
-      console.log("Carrito modificado, producto agregado correctamente");
-      return carts[cindex];
+      const result = await cartModel.updateOne({ _id: cid }, cart)
+      return result;
     } catch(error){
       throw error
     }
   }
 
-  // Lectura de todos los carritos del archivo carrito.json
-  async readCarts(){
+  // Elimina del carrito el producto indicado
+  async delProductByCart(cid,pid){
     try{
-      const data = await fs.readFile(this.file, 'utf8')
-      return JSON.parse(data);
+      const cart = await cartModel.findOne({ _id: cid })
+      const products = cart.products.filter(pr => pr.product.toString()!==pid);
+      cart.products = products
+      const result = await cartModel.updateOne({ _id: cid }, cart)
+      return result;
     } catch(error){
-      if(error.code === 'ENOENT'){
-        return []
-      } else {
-        throw error
-      }
+      throw error
     }
+  }  
+
+  // Elimina todos los productos del carrito
+  async delProductsByCart(cid){
+    try{
+      const cart = await cartModel.findOne({ _id: cid })
+      cart.products=[]
+      const result = await cartModel.updateOne({ _id: cid }, cart)
+      return result;
+    } catch(error){
+      throw error
+    }
+  }  
+
+  // Actualiza el carrito con el arreglo de productos pasado
+  async updateProductsByCart(cid,products){
+    try{      
+      const novalidos = getNoValidProducts(products);
+      if(novalidos){
+        console.log("Productos no validos")
+        return undefined
+      }
+      const cart = await cartModel.findOne({ _id: cid })
+      cart.products=products
+      const result = await cartModel.updateOne({ _id: cid }, cart)
+      return result;
+    } catch(error){
+      throw error
+    }
+  }  
+
+  // Actualiza la cantidad del producto indicado del carrito
+  async updateQuantityByCartProduct(cid,pid,pquantity){
+    try{
+      const quantity = parseInt(pquantity)
+      if(isNaN(quantity)||quantity<=0){
+        this.error = "Cantidad no válida"
+        return undefined
+      }
+      const cart = await cartModel.findOne({ _id: cid })
+      // buscar producto
+      const pindex = cart.products.findIndex(pr => pr.product.toString()===pid);
+      if(pindex<0){
+        this.error = "Producto no válido"
+        return undefined
+      } else {
+        cart.products[pindex].quantity = quantity
+      }
+      const result = await cartModel.updateOne({ _id: cid }, cart)
+      return result;
+    } catch(error){
+      throw error
+    }
+  }  
+
+  getNoValidProducts(products){
+      let novalidos = false;
+      if(products.some(pr=>(!Number.isInteger(pr.quantity)))){
+        this.error = 'Cantidad no válida'
+        return true
+      }
+      if(products.some(pr=>(!(pr.product)||pr.product===''))){
+        this.error = 'Id de producto no válido'
+        return true
+      }
+      return novalidos
+  }
+
+  getError(){
+    return this.error
   }
 
 }
 
-//module.exports = Carts
 export default Carts

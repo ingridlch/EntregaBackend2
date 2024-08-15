@@ -1,6 +1,7 @@
 import express from "express"
 import handlebars from 'express-handlebars'
 import __dirname from "./utils.js"
+import mongoose from "mongoose"
 import productsRouter from "./routes/products.router.js"
 import cartsRouter from "./routes/carts.router.js"
 import viewsRouter from "./routes/views.router.js"
@@ -9,6 +10,10 @@ const PORT = 8080
 
 servidor.app.use(express.json())
 servidor.app.use(express.urlencoded({extended:true}))
+
+mongoose.connect("mongodb+srv://user:user@codercluster.cf9yy1h.mongodb.net/coderbase?retryWrites=true&w=majority&appName=CoderCluster")
+.then(()=>console.log("conectado a la db"))
+.catch(error=>console.error("error en conexion a la db", error))
 
 //configurar Handlebars
 servidor.app.engine('handlebars',handlebars.engine())

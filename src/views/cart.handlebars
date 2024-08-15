@@ -1,0 +1,50 @@
+<header>
+  <div class="container-lg">
+    <div class="row">
+      <div class="col"></div>
+      <div class="col">
+        <div class="text-center"><img src="./../images/logopuertodelicia.png" alt="Logo Puerto Delicia" width="230" /></div>
+      </div>
+      <div class="col">
+      </div>
+    </div>
+  </div>
+</header>  
+<div class="container-lg">
+  {{#if result }}  
+    <div class="row">
+      <div class="col">
+        <table class="table table-hover">
+          <thead>
+            <tr class="table-secondary">
+              <td colspan="4" class="text-center">Carrito de compras </td>
+            </tr>
+            <tr class="table-secondary">
+              <td class="text-center">Producto</td>
+              <td class="text-center">Descripción</td>
+              <td class="text-end">Cantidad</td>
+              <td class="text-end">Precio unitario</td>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each products}}
+              <tr>
+                <td>{{this.product.title}}</td>
+                <td>{{this.product.description}}</td>
+                <td class="text-end">{{this.quantity}} x</td>
+                <td class="text-end">$ {{this.product.price}}</td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>    
+      </div>       
+    </div>  
+    <div class="row m-5">
+      <div class="col text-center">
+        <a class="btn btn-sm btn-outline-secondary" href="http://localhost:8080/products">Volver al listado completo de productos</a>
+      </div>
+    </div>
+  {{else}} 
+    <div class="row">No se encontraron productos</div> 
+  {{/if}}
+</div>

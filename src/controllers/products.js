@@ -1,15 +1,33 @@
-import fs from "fs/promises"
+import productModel from "../models/products.model.js"
 
 class Products{
   constructor(){
-    this.file = "productos.json"
+    this.error = ''
   }
 
   // Busca todos los productos, como se manejan bajas lógicas filtra todos los con status true
-  async getProducts(){
+  async getProducts(plimit=10,ppage=1,pquery='',psort=''){
     try {
-      const products = await this.readProducts();
-      return products.filter(pr=>pr.status);
+      // si se pasó el parámetro query se filtra por categoría (category) o disponibilidad (status=true|false)
+      const query = pquery && pquery!=='' ? pquery : ''
+      const filtro = query==='' ? {} : ((query==='true'||query==='false') ? {status:query} : {category: query})
+
+      // seteo opciones 
+      let limit = parseInt(plimit)
+      let page  = parseInt(ppage)
+      limit = (!isNaN(limit) && limit>0) ? limit : 10
+      page  = (!isNaN(page) && page>0) ? page : 1
+      const opciones = { page, limit, lean: true }
+      const sort = (psort && (psort==='asc' || psort ==='desc')) ? psort : ''
+      if(sort!=='') opciones.sort = {price: sort}
+
+      // busco productos
+      const result = await productModel.paginate(filtro, opciones)      
+      result.payload = result.docs
+      delete result.docs
+      result.prevLink = result.hasPrevPage ? `http://localhost:8080/products?limit=${limit}&page=${result.prevPage}&query=${query}&sort=${sort}` : ''
+      result.nextLink = result.hasNextPage ? `http://localhost:8080/products?limit=${limit}&page=${result.nextPage}&query=${query}&sort=${sort}` : ''
+      return result
     } catch(error) {
       console.log("Error al buscar productos");
       throw error
@@ -19,9 +37,7 @@ class Products{
   // Busca producto por id
   async getProduct(id){
     try {
-      const products = await this.readProducts();
-      const producto = products.find(pr=>pr.id===id);
-      console.log("Producto encontrado")
+      const producto = await productModel.findOne({ _id: id })
       return producto;
     } catch(error) {
       console.log("Error al buscar producto");
@@ -34,12 +50,9 @@ class Products{
     try {
       const product = this.getValidNew(ptitle, pdescription, pcode, pprice, pstock, pcategory, pthumbnails);
       if(product){
-        const products = await this.readProducts();
-        product.id = products.length+1;
-        products.push(product);
-        await fs.writeFile(this.file, JSON.stringify(products,null,2));
+        let result = await productModel.create(product)
         console.log("Producto creado correctamente");
-        return product;
+        return result;
       } else {
         console.log("Error al crear producto, faltan datos");
         return undefined
@@ -53,83 +66,71 @@ class Products{
   // Modifica producto
   async updateProduct(pid, ptitle, pdescription, pcode, pprice, pstock, pcategory, pthumbnails){
     try {
-      const products = await this.readProducts();
-      const index = products.findIndex(pr => pr.id === pid);
-      if(index<0){
-        console.log("Error al modificar producto, id no valido")
-        return undefined
-      }
+      const product = await productModel.findOne({ _id: pid });
       if(ptitle){
         if(ptitle.trim()!=''){
-          products[index].title=ptitle.trim()
+          product.title=ptitle.trim()
         } else {
-          console.log("Error al modificar producto, title no debe ser vacío")
+          this.error = "Title no debe ser vacío"
           return undefined
         }
       }
       if(pdescription){
         if(pdescription.trim()!=''){
-          products[index].description=pdescription.trim()
+          product.description=pdescription.trim()
         } else {
-          console.log("Error al modificar producto, description no debe ser vacío")
+          this.error = "Description no debe ser vacío"
           return undefined
         }
       }
       if(pcode){
         if(pcode.trim()!=''){
-          products[index].code=pcode.trim()
+          product.code=pcode.trim()
         } else {
-          console.log("Error al modificar producto, code no debe ser vacío")
+          this.error = "Code no debe ser vacío"
           return undefined
         }
       }
       if(pprice){
         if(!isNaN(parseFloat(pprice))){
-          products[index].price=parseFloat(pprice)
+          product.price=parseFloat(pprice)
         } else {
-          console.log("Error al modificar producto, price debe ser un valor numérico")
+          this.error = "Price debe ser un valor numérico"
           return undefined
         }
       }
       if(pstock){
         if(!isNaN(parseFloat(pstock))){
-          products[index].stock=parseFloat(pstock)
+          product.stock=parseFloat(pstock)
         } else {
-          console.log("Error al modificar producto, stock debe ser un valor numérico")
+          this.error = "Stock debe ser un valor numérico"
           return undefined
         }
       }
       if(pcategory){
         if(pcategory.trim()!=''){
-          products[index].category=pcategory.trim()
+          product.category=pcategory.trim()
         } else {
-          console.log("Error al modificar producto, category no debe ser vacío")
+          this.error = "Category no debe ser vacío"
           return undefined
         }
       }
-      products[index].thumbnails= (pthumbnails && Array.isArray(pthumbnails)) ? pthumbnails : products[index].thumbnails
+      product.thumbnails= (pthumbnails && Array.isArray(pthumbnails)) ? pthumbnails : product.thumbnails
       
-      await fs.writeFile(this.file, JSON.stringify(products,null,2));
+      let result = await productModel.updateOne({ _id: pid }, product)
       console.log("Producto modificado correctamente");
-      return products[index];
+      return result;
     } catch(error){
       console.log("Error al modificar producto");
       throw error
     }
   }
 
-  // Baja lógica de producto cambiando el status a false
+  // Baja de producto 
   async delProduct(pid){
     try{
-      const products = await this.readProducts();
-      const index = products.findIndex(pr => pr.id === pid);
-      if(index<0){
-        console.log("Error al eliminar producto, id no valido");
-        return false
-      }
-      products[index].status=false;
-      await fs.writeFile(this.file, JSON.stringify(products,null,2));
-      console.log("Producto eliminado correctamente");
+      const result = await productModel.deleteOne({ _id: pid })
+      console.log("Producto eliminado correctamente",result);
       return true;
     } catch(error){
       console.log("Error al dar de baja producto")
@@ -137,10 +138,9 @@ class Products{
     }
   }
 
-  // Valida todos los datos para crear o modificar producto
+  // Valida todos los datos para crear producto
   getValidNew(ptitle, pdescription, pcode, pprice, pstock, pcategory, pthumbnails){
     let result=undefined
-    const id = 0
     const title = ptitle.trim()
     const description = pdescription.trim()
     const code = pcode.trim()
@@ -150,26 +150,17 @@ class Products{
     const thumbnails = pthumbnails===undefined|| !Array.isArray(pthumbnails) ? [] : pthumbnails
     const status = true    
     if (title!=='' && description!=='' && code.trim()!=='' && !isNaN(price) && !isNaN(stock) && category!==''){
-      result = {id, title, description, code, price, status, stock, category, thumbnails}
+      result = {title, description, code, price, status, stock, category, thumbnails}
+    } else {
+      this.error = "Todos los datos son obligatorios, stock y price deben ser numéricos"
     }
     return result;  
   }
 
-  // Lectura de todos los productos del archivo productos.json
-  async readProducts(){
-    try{
-      const data = await fs.readFile(this.file, 'utf8')
-      return JSON.parse(data);
-    } catch(error){
-      if(error.code === 'ENOENT'){
-        return []
-      } else {
-        throw error
-      }
-    }
+  getError(){
+    return this.error
   }
     
 }
 
-//module.exports = Products
 export default Products
