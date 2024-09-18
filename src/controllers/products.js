@@ -5,7 +5,7 @@ class Products{
     this.error = ''
   }
 
-  // Busca todos los productos, como se manejan bajas lógicas filtra todos los con status true
+  // Busca todos los productos, filtros, paginación y ordenamiento
   async getProducts(plimit=10,ppage=1,pquery='',psort=''){
     try {
       // si se pasó el parámetro query se filtra por categoría (category) o disponibilidad (status=true|false)

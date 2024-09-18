@@ -3,16 +3,20 @@
 ### Descripción del proyecto:
 
 Desarrollo de un servidor basado en Node.JS y express. Contiene los endpoints y servicios necesarios para gestionar los productos y carrito de compras de un E-commerce.
-Escucha en el puerto 8080 y tiene los grupos de rutas /api/products y /api/carts.
-Incorpora el motor de plantillas Handlebars para las vistas e integra websockets.
-Se incorpora Mongo como sistema de persistencia.
+Escucha en el puerto 8080 y tiene los grupos de rutas /api/products, /api/carts y api/sessions.
+Incorpora:
+
+- el motor de plantillas Handlebars para las vistas,
+- websockets,
+- Mongo como sistema de persistencia,
+- sistema de auntorización y autenticación.
 
 ### Pasos para probar el proyecto:
 
 - Desde una terminal clonar el proyecto en su máquina local
 
 ```batch
-git clone https://github.com/ingridlch/EntregaBackend.git
+git clone https://github.com/ingridlch/Entrega1Backend2.git
 ```
 
 - Situarse en el directorio del proyecto que se creó al clonar e instalarlo con:
@@ -65,6 +69,21 @@ Se incluyen capturas de pruebas realizadas en Postman que demuestran su funciona
 
 **DELETE** `api/carts/:cid`: Elimina los productos del carrito.
 ![POST /carts/product](./src/public/images/DELETEcarts.jpg)
+
+**POST** `api/sessions/register`: Crea un usuario con los parámetros pasados en el body: first_name:String, last_name:String, email:String (único), age:Number, password:String, cart:id con referencia a Carts, role:String.
+![POST /carts/product](./src/public/images/POSTsessionsRegister.jpg)
+
+**POST** `api/sessions/login`: Permite el login de un usuario con los parámetros pasados por body: email y password.
+![POST /carts/product](./src/public/images/POSTsessionsLogin.jpg)
+
+**GET** `api/sessions/current`: Valida el usuario logueado y devuelve en una respuesta sus datos.
+![GET /carts/product](./src/public/images/GETsessionsCurrent.jpg)
+
+**PUT** `api/sessions/:id`: Actualiza el usuario del id pasado en el parámetro :id con los parámetros pasados en el body.
+![PUT /carts/product](./src/public/images/PUTsessions.jpg)
+
+**DELETE** `api/sessions/:id`: Elimina el usuario con el id pasado en el parámetro :id.
+![DELETE /carts/product](./src/public/images/DELETEsessions.jpg)
 
 ### Vistas
 
