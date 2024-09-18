@@ -9,7 +9,7 @@ Incorpora:
 - el motor de plantillas Handlebars para las vistas,
 - websockets,
 - Mongo como sistema de persistencia,
-- sistema de auntorización y autenticación.
+- sistema de autorización y autenticación (aplica JWT).
 
 ### Pasos para probar el proyecto:
 
