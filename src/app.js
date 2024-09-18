@@ -14,10 +14,9 @@ import { __dirname } from "./utils.js"
 
 const PORT = 8080
 
+//configurar Handlebars, public, cookies y passport
 servidor.app.use(bodyParser.urlencoded({ extended: false }))
 servidor.app.use(bodyParser.json())
-
-//configurar Handlebars, public, cookies y passport
 servidor.app.engine('handlebars',handlebars.engine())
 servidor.app.set('views', __dirname + '/views')
 servidor.app.set('view engine','handlebars')

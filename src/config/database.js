@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-mongoose.connect("MONGO_URL");
+mongoose.connect("mongodb+srv://user:user@codercluster.cf9yy1h.mongodb.net/coderbase?retryWrites=true&w=majority&appName=CoderCluster");
 
 const db = mongoose.connection;
 
