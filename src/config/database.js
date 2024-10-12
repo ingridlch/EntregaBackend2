@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import config from "./config.js"
 
-mongoose.connect("mongodb+srv://user:user@codercluster.cf9yy1h.mongodb.net/coderbase?retryWrites=true&w=majority&appName=CoderCluster");
+mongoose.connect(config.mongo_url);
 
 const db = mongoose.connection;
 

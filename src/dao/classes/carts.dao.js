@@ -1,7 +1,8 @@
 import cartModel from "../models/carts.model.js"
 import productModel from "../models/products.model.js"
+import TicketsDAO from "./tickets.dao.js"
 
-class Carts{
+class CartsDAO{
   constructor(){
     this.error = ''
   }
@@ -36,7 +37,7 @@ class Carts{
 
   // Agrega producto al carrito o aumenta cantidad
   async setProductByCart(cid,pid){
-    try{
+    try{console.log('agrega p al cart')
       const cart = await cartModel.findOne({ _id: cid })
       const pindex = cart.products.findIndex(pr => pr.product.toString()===pid);
       if(pindex<0){
@@ -117,6 +118,40 @@ class Carts{
     }
   }  
 
+  // finaliza el proceso de compra del carrito
+  async setFinishCart(cid,email){console.log(' finish cart 1 ')
+    try {
+      if(!cid || cid===""){ this.error = "Id de carrito válido"; return undefined;}
+      const cart = await cartModel.findOne({ _id: cid })
+      const products=[]//productos con stock suficiente para compra
+      const productscart = []// productos sin stock suficiente, se quedan en el carrito
+      let amount = 0; 
+      let result = null
+      //recorre los productos del carrito, si tiene stock lo descuenta, si no tiene lo deja en el carrito
+      for(let i=0; i<cart.products.length; i++){
+        const producto = await productModel.findOne({ _id: cart.products[i].product })
+        if(producto.stock>=cart.products[i].quantity){
+          producto.stock=producto.stock-parseInt(cart.products[i].quantity);
+          amount += parseInt(cart.products[i].quantity) * parseFloat(producto.price);
+          result = await productModel.updateOne({ _id: cart.products[i].product }, producto)
+          products.push(cart.products[i])
+        } else {
+          productscart.push(cart.products[i])
+        }
+      }
+      if(amount<=0){ this.error = "No hay stock para los productos del carrito"; return undefined;}
+      // genera ticket de compra
+      const Ticket = new TicketsDAO();
+      const ticket = Ticket.setTicket(amount,email,products)
+      // actualiza carrito dejando los productos que no tenian stock
+      cart.products = productscart
+      let resultcart = await cartModel.updateOne({ _id: cid }, cart)
+      return {products_no_process:productscart}
+    } catch(error){
+      throw error
+    }
+  }
+
   getNoValidProducts(products){
       let novalidos = false;
       if(products.some(pr=>(!Number.isInteger(pr.quantity)))){
@@ -136,4 +171,4 @@ class Carts{
 
 }
 
-export default Carts
+export default CartsDAO

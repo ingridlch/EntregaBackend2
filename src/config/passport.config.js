@@ -1,5 +1,5 @@
 import passport from 'passport'
-import userModel from '../models/users.model.js'
+import userModel from '../dao/models/users.model.js'
 import jwt from 'passport-jwt'
 
 const JWTStrategy = jwt.Strategy

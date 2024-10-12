@@ -1,6 +1,6 @@
 import productModel from "../models/products.model.js"
 
-class Products{
+class ProductsDAO{
   constructor(){
     this.error = ''
   }
@@ -163,4 +163,4 @@ class Products{
     
 }
 
-export default Products
+export default ProductsDAO

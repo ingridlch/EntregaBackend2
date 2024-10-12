@@ -1,8 +1,9 @@
-import userModel from "../models/users.model.js"
-import { createHash, isValidPassword } from '../utils.js'
+import userDTO from "./../dao/dtos/users.dtos.js"
+import { createHash, isValidPassword } from "./../utils.js"
 
-class Carts{
-  constructor(){
+export default class UserRepository {
+  constructor(dao) {
+    this.dao = dao;
     this.error = ''
     this.tipoerror = 400
   }
@@ -14,12 +15,12 @@ class Carts{
         this.error = "No se puede validar usuario. Falta email y/o password"
         return undefined
       }  
-      const user = await userModel.findOne({ email }, { email: 1, first_name: 1, last_name: 1, password: 1, role:1 });
+      const user = await this.dao.getByEmail(email);
       if (!user){
         this.error = "Usuario no encontrado"
         return undefined
       }
-      if (isValidPassword(user, password)){ console.log('va login')
+      if (isValidPassword(user, password)){
         return user
       } else {
         this.error = "Usuario o password incorrecto"
@@ -39,14 +40,14 @@ class Carts{
         this.error = "No se puede crear usuario. Falta email y/o password"
         return undefined
       }
-      const user = userModel.findOne({ email })
+      const user =  await this.dao.getByEmail(email);
       console.log(user.email)
       if (user && user.email===email){
         this.error = "No se puede crear usuario, ya hay registrado con el email ingresado"
         return undefined
       } else{ 
-        const newUser = new userModel({first_name, last_name, email, age, password:createHash(password), cart, role})
-        await newUser.save()
+        let userToInsert = new userDTO({first_name, last_name, email, age, password, cart, role});
+        let result = await this.dao.create(userToInsert);
         return newUser
       }
     } catch(error){
@@ -59,15 +60,9 @@ class Carts{
   async updateUser(id, first_name, last_name, age, password, cart, role){
     try {
       if(!id || id===""){ this.error = "No se puede modificar usuario. Id no válido"; return undefined;}
-      const user = await userModel.findOne({ _id: id });
-      if(first_name&&first_name.trim()!='') user.first_name=first_name.trim()
-      if(last_name&&last_name.trim()!='') user.last_name=last_name.trim()
-      if(age&& parseInt(age)>0) user.age=age
-      if(password&&password.trim()!='') user.password=createHash(password)
-      if(cart) user.cart=cart
-      if(role&&role.trim()!='') user.role=role.trim()
-       console.log(user)
-      let result = await userModel.updateOne({ _id: id }, user)
+      const user = await this.dao.getById(id); console.log(user)
+      let userToUpdate = new userDTO(user,{first_name, last_name, age, password, cart, role});
+      let result = await this.dao.update(id,userToUpdate)
       return result;
     } catch(error){
       console.log("Error al modificar usuario");
@@ -79,7 +74,7 @@ class Carts{
   async delUser(id){
     try{
       if(!id || id===""){ this.error = "No se puede eliminar usuario. Id no válido"; return false;}
-      const result = await userModel.deleteOne({ _id: id })
+      let result = await this.dao.delete(id);
       console.log("Usuario eliminado correctamente",result);
       return true;
     } catch(error){
@@ -97,5 +92,3 @@ class Carts{
   }
 
 }
-
-export default Carts

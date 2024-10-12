@@ -10,13 +10,16 @@ import servidor from "./server.js"
 import passport from "passport"
 import initializePassport from "./config/passport.config.js"
 import cookieParser from "cookie-parser"
+import cors from "cors"
 import { __dirname } from "./utils.js"
+import config from "./config/config.js"
 
-const PORT = 8080
+const PORT = config.port
 
 //configurar Handlebars, public, cookies y passport
 servidor.app.use(bodyParser.urlencoded({ extended: false }))
 servidor.app.use(bodyParser.json())
+servidor.app.use(cors())
 servidor.app.engine('handlebars',handlebars.engine())
 servidor.app.set('views', __dirname + '/views')
 servidor.app.set('view engine','handlebars')
