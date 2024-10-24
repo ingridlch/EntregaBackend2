@@ -1,4 +1,5 @@
-import userDTO from "./../dao/dtos/users.dtos.js"
+import UserDTOtoClient from "../dao/dtos/users.dto.toclient.js" // DTO para devolver datos al cliente
+import userDTO from "../dao/dtos/users.dto.todao.js" // DTO para moldear el objeto y pasarlo al DAO
 import { createHash, isValidPassword } from "./../utils.js"
 
 export default class UserRepository {
@@ -33,6 +34,26 @@ export default class UserRepository {
     }
   }
 
+  // Busca user por email y devuelve datos no sensibles
+  async getUserByEmail(email){
+    try {
+      if(!(email && email.trim()!='')) {
+        this.error = "No se puede buscar usuario. Falta email"
+        return undefined
+      }  
+      const user = await this.dao.getByEmail(email);
+      if (!user){
+        this.error = "Usuario no encontrado"
+        return undefined
+      }
+      let userToReturn = new UserDTOtoClient(user);
+      return userToReturn;
+    } catch(error) {
+      console.log("Error en log de usuario ");
+      throw error
+    }
+  }
+
   // Crea nuevo usuario
   async setUser(first_name, last_name, email, age, password, cart, role){
     try{
@@ -46,7 +67,7 @@ export default class UserRepository {
         this.error = "No se puede crear usuario, ya hay registrado con el email ingresado"
         return undefined
       } else{ 
-        let userToInsert = new userDTO({first_name, last_name, email, age, password, cart, role});
+        let userToInsert = new userDTO({first_name, last_name, email, age, password:createHash(password), cart, role});
         let result = await this.dao.create(userToInsert);
         return newUser
       }
@@ -61,7 +82,7 @@ export default class UserRepository {
     try {
       if(!id || id===""){ this.error = "No se puede modificar usuario. Id no válido"; return undefined;}
       const user = await this.dao.getById(id); console.log(user)
-      let userToUpdate = new userDTO(user,{first_name, last_name, age, password, cart, role});
+      let userToUpdate = new userDTO(user,{first_name, last_name, age, password:createHash(password), cart, role});
       let result = await this.dao.update(id,userToUpdate)
       return result;
     } catch(error){

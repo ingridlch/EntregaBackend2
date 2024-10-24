@@ -12,6 +12,7 @@ Incorpora:
 - Sistema de autorización y autenticación (aplica JWT).
 - Variables de entorno.
 - Arquitectura por capas en todo el proyecto. Se aplica los conceptos DAO, DTO y patrón Repository para manejo de sesiones y usuarios.
+- Mailing.
 
 ### Pasos para probar el proyecto:
 
@@ -26,6 +27,8 @@ git clone https://github.com/ingridlch/EntregaBackend2.git
 ```batch
 npm install
 ```
+
+- Configurar las variables de entorno en el archivo .env ubicado en la raíz del proyecto. En env.example se listan cuales se deben configurar.
 
 ### Endpoints de la API
 
@@ -72,8 +75,9 @@ Se incluyen capturas de pruebas realizadas en Postman que demuestran su funciona
 **DELETE** `api/carts/:cid`: Elimina los productos del carrito.
 ![POST /carts/product](./src/public/images/DELETEcarts.jpg)
 
-**POST** `api/carts/:cid/purchase`: Finaliza el proceso de compra del carrito. Se corrobora el stock del producto, descontando el correspondiente a los productos comprados y quedando en el carrito los sin stock. Se genera el ticket de la compra con los campos: id (generado por mongo), code (autogenerado), purchase_datetime (fecha y hora de la compra), amount (valor total de la compra), purchaser (correo del usuario), products (lista de productos comprados con su cantidad). Al finalizarse la compra se devuelve el listado de productos que quedaron en el carrito por no contar con stock. Sólo habilitado para usuario user, se debe pasar el token correspondiente.
+**POST** `api/carts/:cid/purchase`: Finaliza el proceso de compra del carrito. Se corrobora el stock del producto, descontando el correspondiente a los productos comprados y quedando en el carrito los sin stock. Se genera el ticket de la compra con los campos: id (generado por mongo), code (autogenerado), purchase_datetime (fecha y hora de la compra), amount (valor total de la compra), purchaser (correo del usuario), products (lista de productos comprados con su cantidad). Al finalizarse la compra se devuelve el listado de productos que quedaron en el carrito por no contar con stock. Se envía mail al comprador avisando que la misma finalizó exitosamente. Sólo habilitado para usuario user, se debe pasar el token correspondiente.
 ![POST /carts/product](./src/public/images/POSTcartspurchase.jpg)
+![POST /carts/product](./src/public/images/ticket.jpg)
 
 **POST** `api/sessions/register`: Crea un usuario con los parámetros pasados en el body: first_name:String, last_name:String, email:String (único), age:Number, password:String, cart:id con referencia a Carts, role:String.
 ![POST /carts/product](./src/public/images/POSTsessionsRegister.jpg)

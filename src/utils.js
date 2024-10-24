@@ -28,14 +28,6 @@ export const passportCall = (strategy) => {
   }
 }
 
-export const authorization = (role) =>{
-  return async (req, res, next) =>{
-    if(!req.user) return res.status(401).send({error: "User unauthorized"})
-    if(req.user.role!==role)  return res.status(403).send({error: "No permission for type of user"})
-    next()  
-  }
-}
-
 export const handlePolicies = (policies) => {
   return (req, res, next) => {
     if (policies.includes("PUBLIC")) {
@@ -57,5 +49,13 @@ export const handlePolicies = (policies) => {
         return res.status(401).json({ message: "Token de autorizacion inválido, no se puede realizar la acción" })
       }
     }
+  }
+}
+
+export const authorization = () =>{
+  return async (req, res, next) =>{
+    if(!req.user) return res.status(401).send({error: "User unauthorized"})
+    if(req.user.role!=='user'||req.user.role!=='admin')  return res.status(403).send({error: "No permission for type of user"})
+    next()  
   }
 }
