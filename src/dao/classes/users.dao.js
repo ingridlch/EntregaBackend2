@@ -4,7 +4,7 @@ class UsersDAO{
   constructor(){}
   // Busca user por email
   async getByEmail(email){
-    const user = await userModel.findOne({ email }, { email: 1, first_name: 1, last_name: 1, password: 1, role:1 });
+    const user = await userModel.findOne({ email }, { email: 1, first_name: 1, last_name: 1, password: 1, role:1, cart: 1 });
     return user;
   }
 

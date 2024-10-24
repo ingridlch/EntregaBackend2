@@ -5,7 +5,7 @@ export default class UserDTO {
       this.last_name  = (upuser.last_name && upuser.last_name.trim()!='') ? upuser.last_name.trim() : user.last_name
       this.email      = user.email
       this.age        = upuser.age && parseInt(upuser.age)>0 ? upuser.age : user.age
-      this.password   = (upuser.password && upuser.password.trim()!='') ? upuser.password : user.password
+      this.password   = (upuser.password) ? upuser.password : user.password
       this.cart       = (upuser.cart) ? upuser.cart : user.cart
       this.role       = (upuser.role && upuser.role.trim()!='') ? upuser.role.trim() : user.role
     } else {

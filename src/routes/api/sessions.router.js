@@ -7,7 +7,7 @@ const router = Router();
 router.post("/login", loginUser)
 router.get("/current", passportCall('jwt'), handlePolicies(["user","admin"]), current)
 router.post("/register", registerUser)
-router.put("/:id", updateUser)
+router.put("/:mail", handlePolicies(["user","admin"]), updateUser)
 router.delete("/:id", delUser)
 
 export default router;

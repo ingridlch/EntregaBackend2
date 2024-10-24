@@ -88,7 +88,7 @@ Se incluyen capturas de pruebas realizadas en Postman que demuestran su funciona
 **GET** `api/sessions/current`: Valida el usuario logueado y devuelve en una respuesta sus datos.
 ![GET /carts/product](./src/public/images/GETsessionsCurrent.jpg)
 
-**PUT** `api/sessions/:id`: Actualiza el usuario del id pasado en el parámetro :id con los parámetros pasados en el body.
+**PUT** `api/sessions/:mail`: Actualiza el usuario con email pasado en el parámetro :mail con los parámetros pasados en el body. Se debe enviar token de usuario.
 ![PUT /carts/product](./src/public/images/PUTsessions.jpg)
 
 **DELETE** `api/sessions/:id`: Elimina el usuario con el id pasado en el parámetro :id.

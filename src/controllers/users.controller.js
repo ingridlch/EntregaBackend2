@@ -42,9 +42,9 @@ export const registerUser = (req,res)=>{console.log("nuevo usuario")
 }
 
 export const updateUser = (req,res)=>{
-  const id = req.params.id;
+  const mail = req.params.mail;
   const {first_name, last_name, age, password, cart, role} = req.body
-  userService.updateUser(id, first_name, last_name, age, password, cart, role)
+  userService.updateUser(mail, first_name, last_name, age, password, cart, role)
   .then(user=>{
     if(user){
       res.send({result: "success", payload:user})

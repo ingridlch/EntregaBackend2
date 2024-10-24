@@ -62,13 +62,13 @@ export default class UserRepository {
         return undefined
       }
       const user =  await this.dao.getByEmail(email);
-      console.log(user.email)
       if (user && user.email===email){
         this.error = "No se puede crear usuario, ya hay registrado con el email ingresado"
         return undefined
       } else{ 
         let userToInsert = new userDTO({first_name, last_name, email, age, password:createHash(password), cart, role});
         let result = await this.dao.create(userToInsert);
+        const newUser = new UserDTOtoClient(userToInsert)
         return newUser
       }
     } catch(error){
@@ -78,12 +78,12 @@ export default class UserRepository {
   }
 
   // Modifica usuario
-  async updateUser(id, first_name, last_name, age, password, cart, role){
+  async updateUser(email, first_name, last_name, age, password, cart, role){
     try {
-      if(!id || id===""){ this.error = "No se puede modificar usuario. Id no válido"; return undefined;}
-      const user = await this.dao.getById(id); console.log(user)
-      let userToUpdate = new userDTO(user,{first_name, last_name, age, password:createHash(password), cart, role});
-      let result = await this.dao.update(id,userToUpdate)
+      if(!email || email===""){ this.error = "No se puede modificar usuario: email no válido"; return undefined;}
+      const user = await this.dao.getByEmail(email); console.log(user)
+      let userToUpdate = new userDTO(user,{first_name, last_name, age, password:(password && password.trim!==''?createHash(password):undefined), cart, role});
+      let result = await this.dao.update(user.id,userToUpdate)
       return result;
     } catch(error){
       console.log("Error al modificar usuario");
