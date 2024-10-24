@@ -11,7 +11,7 @@ Incorpora:
 - Mongo como sistema de persistencia.
 - Sistema de autorización y autenticación (aplica JWT).
 - Variables de entorno.
-- Arquitectura por capas en todo el proyecto. Se aplica los conceptos DAO, DTO y patrón Repository para manejo de sesiones y usuarios.
+- Arquitectura por capas en todo el proyecto. Se aplica los conceptos DAO, DTO y patrón Repository.
 - Mailing.
 
 ### Pasos para probar el proyecto:
